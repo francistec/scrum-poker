@@ -19,6 +19,7 @@ const Home = ({ className }) => {
   const socket = useSocket();
   const [listenersReady, setListenersReady] = useState(false);
   const [{ room }, dispatch] = useGlobalState();
+  const hostNameIsRequired = parseInt(process.env.NEXT_PUBLIC_NAME_TO_CREATE_ROOM_IS_REQUIRED, 2);
 
   const updateState = useCallback((field, value) => {
     dispatch(updateRoom({ [field]: value }));
@@ -26,8 +27,11 @@ const Home = ({ className }) => {
 
   const canCreateRoom = useMemo(() => {
     const { name, host, cardsMode } = room;
-    return !!name.length && !!host.name.length && !!cardsMode.length;
-  }, [room]);
+
+    return hostNameIsRequired
+      ? !!name.length && !!host.name.length && !!cardsMode.length
+      : !!name.length && !!cardsMode.length;
+  }, [room, hostNameIsRequired]);
 
   const createRoom = useCallback(() => {
     if (socket && canCreateRoom) {
@@ -60,13 +64,17 @@ const Home = ({ className }) => {
         <HtmlHead title="Scrum poker - Home" />
         <h1>Create a room</h1>
         <div className="component-home__content">
-          <Input
-            className="component-home__input component-home__input__host-name"
-            placeholder="Your name"
-            onChange={({ target: { value } }) => updateState('host', { name: value })}
-            value={room.host ? room.host.name : ''}
-            size="lg"
-          />
+          {hostNameIsRequired > 0
+            && (
+              <Input
+                className="component-home__input component-home__input__host-name"
+                placeholder="Your name"
+                onChange={({ target: { value } }) => updateState('host', { name: value })}
+                value={room.host ? room.host.name : ''}
+                size="lg"
+              />
+            )}
+
           <Input
             className="component-home__input component-home__input__room-name"
             placeholder="Room name"

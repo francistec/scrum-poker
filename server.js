@@ -16,6 +16,7 @@ const port = process.env.PORT || 3000;
     'https://www.the-scrum-poker.online',
     'https://online-scrum-poker.com',
     'https://www.online-scrum-poker.com',
+    'http://localhost:3000',
   ] : '*';
 
   const io = socketIo(server, { cors: { origin: allowedOrigins } });
