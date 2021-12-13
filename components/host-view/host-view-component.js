@@ -9,6 +9,7 @@ const HostView = ({
   className,
   room,
   guestsVoted,
+  hostVoteRequired,
   hostVoted,
   clearVotes,
   isHost,
@@ -44,17 +45,19 @@ const HostView = ({
       )}
       <div className="component-host-view__cards">
         <StyledCardList>
-          <div className="component-host-view__card-wrap">
-            <StyledCardListItem
-              disabled={!guestsVoted}
-              revealed={allVoted}
-              readOnly
-            >
-              <span>{room.host.vote ? room.host.vote : '?'}</span>
-              {!hostVoted && <small>Wait until all guests voted</small>}
-            </StyledCardListItem>
-            <span>{room.host.name}</span>
-          </div>
+          {hostVoteRequired && 
+            <div className="component-host-view__card-wrap">
+              <StyledCardListItem
+                disabled={!guestsVoted}
+                revealed={allVoted}
+                readOnly
+              >
+                <span>{room.host.vote ? room.host.vote : '?'}</span>
+                {!hostVoted && <small>Wait until all guests voted</small>}
+              </StyledCardListItem>
+              <span>{room.host.name}</span>
+            </div>
+          }    
           {room.guests.map(({ id, name, vote = '?' }) => (
             <div className="component-host-view__card-wrap" key={id}>
               <StyledCardListItem
