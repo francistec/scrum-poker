@@ -1,6 +1,9 @@
 import { SET_ROOM, UPDATE_ROOM } from './action-types';
 
 export const initialState = {
+  settings:{
+    hostVoteRequired: (process.env.NEXT_PUBLIC_HOST_VOTE_REQUIRED == 'true')
+  },
   room: {
     id: null,
     name: '',

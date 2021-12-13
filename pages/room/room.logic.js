@@ -15,7 +15,7 @@ import GuestView from '../../components/guest-view';
 export default function Room({ className }) {
   const router = useRouter();
   const socket = useSocket();
-  const [{ room = {} }, dispatch] = useGlobalState();
+  const [{ room = {}, settings }, dispatch] = useGlobalState();
   const [listenersReady, setListenersReady] = useState(false);
   const [guestsVoted, setGuestsVoted] = useState(false);
   const [hostVoted, setHostVoted] = useState(false);
@@ -45,7 +45,7 @@ export default function Room({ className }) {
   }, []);
 
   const updateHostVoted = useCallback((updatedRoom) => {
-    if (updatedRoom.host.vote) {
+    if (updatedRoom.host.vote || !settings.hostVoteRequired) {
       setHostVoted(true);
     }
   }, []);
@@ -137,6 +137,7 @@ export default function Room({ className }) {
         hostVoted={hostVoted}
         clearVotes={clearVotes}
         isHost={isHost}
+        hostVoteRequired={settings.hostVoteRequired}
         startSession={startSession}
         sessionStarted={sessionStarted}
       />
